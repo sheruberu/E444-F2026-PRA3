@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Chat with the bot, {{ name }}!</h1>
+        <a class="btn btn-outline-secondary" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <p class="text-muted">Signed in as {{ email }}</p>
+
+    <div id="transcript" class="border rounded p-3 mb-3"
+         style="height: 320px; overflow-y: auto; background: #f8f9fa;">
+        {% for entry in history %}
+            <p class="mb-1">
+                <strong>{{ 'You' if entry.role == 'user' else 'Bot' }}:</strong>
+                {{ entry.text }}
+            </p>
+        {% endfor %}
+    </div>
+
+    <form id="chat-form" class="d-flex gap-2">
+        <input id="message" class="form-control" autocomplete="off"
+               placeholder="Try: My name is Alice" required>
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message');
+        const transcript = document.getElementById('transcript');
+
+        function addLine(who, text) {
+            const p = document.createElement('p');
+            p.className = 'mb-1';
+            const label = document.createElement('strong');
+            label.textContent = who + ': ';
+            p.appendChild(label);
+            p.appendChild(document.createTextNode(text));
+            transcript.appendChild(p);
+            transcript.scrollTop = transcript.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const message = messageInput.value.trim();
+            if (!message) { return; }
+
+            addLine('You', message);
+            messageInput.value = '';
+
+            const response = await fetch("{{ url_for('chat') }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            addLine('Bot', data.reply);
+        });
+    </script>
+{% endblock %}
