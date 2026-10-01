@@ -1,8 +1,15 @@
 {% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <h1>Hello Shehryar!</h1>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endfor %}
+
+    <h1>Hello {{ name or 'Stranger' }}!</h1>
     <p>The local date and time is {{ moment(current_time).format('LLLL') }}.</p>
+
+    {{ render_form(form) }}
 {% endblock %}
