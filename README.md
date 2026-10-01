@@ -8,3 +8,6 @@ This repo is a clone of https://github.com/miguelgrinberg/flasky.
 
 ![Chapter 3 commit](screenshots/activity1-3-commit.png)
 
+## Activity 1.4
+
+![Chapter 4 commit](screenshots/activity1-4-form.png)

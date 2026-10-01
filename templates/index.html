@@ -9,6 +9,9 @@
     {% endfor %}
 
     <h1>Hello {{ name or 'Stranger' }}!</h1>
+        {% if email %}
+            <p>Your email address is {{ email }}.</p>
+        {% endif %}
     <p>The local date and time is {{ moment(current_time).format('LLLL') }}.</p>
 
     {{ render_form(form) }}
